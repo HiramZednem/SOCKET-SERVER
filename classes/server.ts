@@ -20,7 +20,7 @@ export default class Server {
         this.port = SERVER_PORT;
 
         this.httpServer = new http.Server( this.app );
-        this.io = require('socket.io')(this.httpServer);
+        this.io = require('socket.io')(this.httpServer, { cors: { origin: true, credentials: true } });
         
         this.escucharSockets()
     }
@@ -34,8 +34,17 @@ export default class Server {
         console.log('Escuchando conexiones -> sockets');
 
         this.io.on('connection', (cliente) => {
-            console.log('Nuevo cliente conectado');
+            console.log('cliente conectado');
+
+
+            cliente.on('disconnect', () => {
+                console.log('cliente desconectado');
+            });
+
+
         })
+
+        
     }
 
     start ( callback: () => void ) {
